@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(ReservedUsernameException.class)
   public ResponseEntity<RegisterResponseDTO> reservedUsernameExceptionHandling(ReservedUsernameException ex) {
-    return new ResponseEntity<>(new RegisterResponseDTO("Username already taken, please choose an other one."),
+    return new ResponseEntity<>(new RegisterResponseDTO("Username is already taken, please choose another one."),
         HttpStatus.CONFLICT);
   }
 
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(ReservedEMailException.class)
   public ResponseEntity<RegisterResponseDTO> reservedEMailException(ReservedEMailException ex) {
-    return new ResponseEntity<>(new RegisterResponseDTO("Username already taken, please choose an other one."),
+    return new ResponseEntity<>(new RegisterResponseDTO("E-mail is already taken, please choose another one."),
         HttpStatus.CONFLICT);
   }
 }
