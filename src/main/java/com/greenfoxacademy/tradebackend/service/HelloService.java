@@ -11,4 +11,9 @@ public class HelloService {
     return hello;
   }
 
+  public Hello helloToken(){
+    Hello hello = new Hello("You need a token to see this!");
+    return hello;
+  }
+
 }
