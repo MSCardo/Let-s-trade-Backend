@@ -2,7 +2,10 @@ package com.greenfoxacademy.tradebackend.exception.handler;
 
 
 
+import com.greenfoxacademy.tradebackend.exception.exception.InsufficientBalanceException;
+import com.greenfoxacademy.tradebackend.exception.exception.InvalidAmountException;
 import com.greenfoxacademy.tradebackend.exception.exception.MissingParameterException;
+import com.greenfoxacademy.tradebackend.exception.exception.NoSuchStockException;
 import com.greenfoxacademy.tradebackend.exception.exception.NotValidEMailException;
 import com.greenfoxacademy.tradebackend.exception.exception.NotValidatedUserException;
 import com.greenfoxacademy.tradebackend.exception.exception.ReservedEMailException;
@@ -24,7 +27,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(ReservedUsernameException.class)
   public ResponseEntity<RegisterResponseDTO> reservedUsernameExceptionHandling(ReservedUsernameException ex) {
-    return new ResponseEntity<>(new RegisterResponseDTO("Username already taken, please choose an other one."),
+    return new ResponseEntity<>(new RegisterResponseDTO("Username is already taken, please choose another one."),
         HttpStatus.CONFLICT);
   }
 
@@ -61,8 +64,26 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ReservedEMailException.class)
-  public ResponseEntity<RegisterResponseDTO> reservedEMailException(ReservedEMailException ex) {
-    return new ResponseEntity<>(new RegisterResponseDTO("Username already taken, please choose an other one."),
+  public ResponseEntity<RegisterResponseDTO> reservedEMailExceptionHandling(ReservedEMailException ex) {
+    return new ResponseEntity<>(new RegisterResponseDTO("Email is already taken, please choose another one."),
+        HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(InsufficientBalanceException.class)
+  public ResponseEntity<ErrorDTO> insufficientBalanceExceptionHandling(){
+    return new ResponseEntity<>(new ErrorDTO("Insufficient funds!"),
+        HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(NoSuchStockException.class)
+  public ResponseEntity<ErrorDTO> noSuchStockExceptionHandling(){
+    return new ResponseEntity<>(new ErrorDTO("No such stock can be found!"),
+        HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(InvalidAmountException.class)
+  public ResponseEntity<ErrorDTO> invalidAmountExceptionHandling(){
+    return new ResponseEntity<>(new ErrorDTO("Invalid amount!"),
         HttpStatus.CONFLICT);
   }
 }

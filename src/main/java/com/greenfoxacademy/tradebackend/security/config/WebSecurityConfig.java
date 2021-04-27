@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.csrf().disable()
         .addFilterBefore(filterChainExceptionHandler, UsernamePasswordAuthenticationFilter.class)
         .authorizeRequests()
-        .antMatchers("/login", "/register", "/register/confirm").permitAll()
+        .antMatchers("/login", "/register", "/register/confirm", "/stock/**").permitAll()
         .anyRequest().authenticated().and()
         .exceptionHandling().and().sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
