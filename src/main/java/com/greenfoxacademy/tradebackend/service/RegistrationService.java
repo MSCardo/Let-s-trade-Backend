@@ -14,7 +14,9 @@ import com.greenfoxacademy.tradebackend.security.confirmationToken.ConfirmationT
 import com.greenfoxacademy.tradebackend.service.email.EmailSender;
 import com.greenfoxacademy.tradebackend.service.email.EmailService;
 import com.greenfoxacademy.tradebackend.service.email.EmailValidator;
+import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class RegistrationService {
 
 
@@ -33,6 +34,21 @@ public class RegistrationService {
   private final ConfirmationTokenService confirmationTokenService;
   private final EmailSender emailSender;
   private final EmailService emailService;
+
+  @Autowired
+  public RegistrationService(UserService userService,
+                             SignUpService signUpService,
+                             EmailValidator emailValidator,
+                             ConfirmationTokenService confirmationTokenService,
+                             EmailSender emailSender,
+                             EmailService emailService) {
+    this.userService = userService;
+    this.signUpService = signUpService;
+    this.emailValidator = emailValidator;
+    this.confirmationTokenService = confirmationTokenService;
+    this.emailSender = emailSender;
+    this.emailService = emailService;
+  }
 
   public RegisterResponseDTO register(RegistrationRequestDTO request)
       throws UserException {
@@ -51,7 +67,6 @@ public class RegistrationService {
             request.getEmail(),
             request.getPassword(),
             UserRole.USER
-
         )
     );
 
