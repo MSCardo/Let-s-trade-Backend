@@ -106,7 +106,7 @@ public class RegistrationService {
   }
 
 
-  public void checkForMissingRegisterParameters(RegistrationRequestDTO requestDTO) throws MissingParameterException {
+  private void checkForMissingRegisterParameters(RegistrationRequestDTO requestDTO) throws MissingParameterException {
     List<String> missingParameterList = new ArrayList<>();
     userService.checkIfNullOrEmptyField(requestDTO.getUsername(), "username", missingParameterList);
     userService.checkIfNullOrEmptyField(requestDTO.getPassword(), "password", missingParameterList);

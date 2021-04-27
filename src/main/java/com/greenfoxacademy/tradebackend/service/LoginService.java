@@ -65,7 +65,7 @@ public class LoginService {
   }
 
 
-  public void checkForMissingLoginParameters(AuthenticationRequest loginData) throws MissingParameterException {
+  private void checkForMissingLoginParameters(AuthenticationRequest loginData) throws MissingParameterException {
     List<String> missingParameterList = new ArrayList<>();
     userService.checkIfNullOrEmptyField(loginData.getUsername(), "username", missingParameterList);
     userService.checkIfNullOrEmptyField(loginData.getPassword(), "password", missingParameterList);
@@ -75,11 +75,11 @@ public class LoginService {
   }
 
 
-  public Boolean isUsernameMissing(AuthenticationRequest loginRequest) {
+  private Boolean isUsernameMissing(AuthenticationRequest loginRequest) {
     return (loginRequest.getUsername() == null || loginRequest.getUsername().equals(""));
   }
 
-  public Boolean isPasswordMissing(AuthenticationRequest loginRequest) {
+  private Boolean isPasswordMissing(AuthenticationRequest loginRequest) {
     return (loginRequest.getPassword() == null || loginRequest.getPassword().equals(""));
   }
 
