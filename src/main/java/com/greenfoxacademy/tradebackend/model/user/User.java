@@ -43,6 +43,10 @@ public class User implements UserDetails {
   private List<Stock> stock;
   private Double balance;
 
+  public User(String username) {
+    this.username = username;
+  }
+
   public User(String username,
               String email,
               String password,
