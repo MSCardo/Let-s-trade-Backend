@@ -39,7 +39,7 @@ public class User implements UserDetails {
   private UserRole userRole;
   private Boolean locked = false;
   private Boolean enabled = false;
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
   private List<Stock> stock;
   private Double balance;
 

@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -31,6 +32,7 @@ public abstract class Stock {
   private Long id;
   private String symbol;
   private String companyName;
+  private Double buyPrice;
   private Double latestPrice;
   private Timestamp timestamp;
   private Integer amount;
@@ -43,9 +45,29 @@ public abstract class Stock {
     this.timestamp = new Timestamp(date.getTime());
     this.symbol = symbol;
     this.companyName = companyName;
+    this.buyPrice = latestPrice;
     this.latestPrice = latestPrice;
     this.amount = amount;
     this.user = user;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Stock stock = (Stock) o;
+    return id.equals(stock.id) && symbol.equals(stock.symbol) && companyName.equals(stock.companyName) &&
+        buyPrice.equals(stock.buyPrice) && latestPrice.equals(stock.latestPrice) && timestamp.equals(stock.timestamp) &&
+        amount.equals(stock.amount) && user.equals(stock.user);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, symbol, companyName, buyPrice, latestPrice, timestamp, amount, user);
   }
 
   public abstract String getType();
