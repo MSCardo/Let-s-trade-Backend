@@ -19,7 +19,7 @@ public class GOOG extends Stock{
 
   @Override
   public String getType() {
-    return null;
+    return "GOOG";
   }
 
 }

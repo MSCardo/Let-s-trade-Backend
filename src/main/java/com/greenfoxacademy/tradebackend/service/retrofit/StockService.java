@@ -7,6 +7,7 @@ import com.greenfoxacademy.tradebackend.model.stock.Stock;
 import com.greenfoxacademy.tradebackend.model.stock.StockAPI;
 import com.greenfoxacademy.tradebackend.model.stock.StockFactory;
 import com.greenfoxacademy.tradebackend.model.stock.StockResponseDTO;
+import com.greenfoxacademy.tradebackend.model.stock.StockStatusDTO;
 import com.greenfoxacademy.tradebackend.model.user.User;
 import com.greenfoxacademy.tradebackend.repository.StockRepository;
 import com.greenfoxacademy.tradebackend.service.UserService;
@@ -51,7 +52,7 @@ public class StockService {
   }
 
 
-  public List<StockResponseDTO> buyStock(String symbol, Integer amount, User user)
+  public StockStatusDTO buyStock(String symbol, Integer amount, User user)
       throws InsufficientBalanceException, NoSuchStockException, InvalidAmountException {
     isAmountValid(amount);
     isSymbolValid(symbol);
@@ -63,30 +64,32 @@ public class StockService {
     StockAPI stockAPI = getStockQuote(symbol);
     userService.saveUser(user);
     stockRepository.save(stockFactory.createStock(stockAPI, symbol, user, amount));
-
-    return stockToResponseDTO(user.getStock());
+    getUpdatedStocks(user);
+    return new StockStatusDTO(user.getBalance(),stockToResponseDTO(user.getStock()));
   }
-
 
 
   public List<StockResponseDTO> stockToResponseDTO(List<Stock> stockList) {
     return stockList.stream()
-        .map(s -> new StockResponseDTO(s.getAmount(), s.getLatestPrice(), s.getSymbol()))
+        .map(s -> new StockResponseDTO(s.getAmount(), s.getBuyPrice(), s.getLatestPrice(), s.getSymbol(), s.getTimestamp()))
         .collect(Collectors.toList());
   }
 
-  public Integer getAllAmountBySymbol(String symbol, List<Stock> stockList) throws NoSuchStockException {
+  public Integer getAllAmountBySymbol(String symbol, User user) throws NoSuchStockException {
     Integer counter = 0;
-    for (Stock stock : stockList) {
-      if (symbol.equalsIgnoreCase(stock.getType())) {
-        counter += stock.getAmount();
+    List<Stock> stockList = user.getStock();
+    for (int i = 0; i < stockList.size(); i++) {
+      if (stockList.get(i).getType().equalsIgnoreCase(symbol)){
+        counter = counter + stockList.get(i).getAmount();
       }
     }
     return counter;
   }
 
   private void isSymbolValid(String symbol) throws NoSuchStockException {
-    if (symbol == null || !symbol.equalsIgnoreCase("GOOG") && !symbol.equalsIgnoreCase("MSFT") && !symbol.equalsIgnoreCase("TWTR") && !symbol.equalsIgnoreCase("FB")) {
+    if (symbol == null ||
+        !symbol.equalsIgnoreCase("GOOG") && !symbol.equalsIgnoreCase("MSFT") && !symbol.equalsIgnoreCase("TWTR") &&
+            !symbol.equalsIgnoreCase("FB")) {
       throw new NoSuchStockException();
     }
   }
@@ -97,5 +100,74 @@ public class StockService {
     }
   }
 
+  public List<Stock> getStocksByUser(User user) {
+    return stockRepository.findStocksByUser(user);
+  }
 
+
+  public List<Stock> getUpdatedStocks(User user) {
+    List<Stock> stockList = getStocksByUser(user);
+    Double googPrice = getStockQuote("GOOG").getLatestPrice();
+    Double msftPrice = getStockQuote("MSFT").getLatestPrice();
+    Double twtrPrice = getStockQuote("TWTR").getLatestPrice();
+    Double fbPrice = getStockQuote("FB").getLatestPrice();
+    for (Stock stock : stockList) {
+      switch (stock.getSymbol()) {
+        case "GOOG":
+          stock.setLatestPrice(googPrice);
+          stockRepository.save(stock);
+          break;
+        case "MSFT":
+          stock.setLatestPrice(msftPrice);
+          stockRepository.save(stock);
+          break;
+        case "TWTR":
+          stock.setLatestPrice(twtrPrice);
+          stockRepository.save(stock);
+          break;
+        case "FB":
+          stock.setLatestPrice(fbPrice);
+          stockRepository.save(stock);
+          break;
+      }
+    }
+    return stockList;
+  }
+
+  public StockStatusDTO sellStock(String symbol, Integer amount, User user) throws NoSuchStockException, InvalidAmountException {
+    isAmountValid(amount);
+    isSymbolValid(symbol);
+    Integer globalAmount = getAllAmountBySymbol(symbol, user);
+    if (globalAmount - amount < 0) {
+      throw new InvalidAmountException();
+    }
+    Integer remainingAmount = globalAmount - amount;
+    user.setStock(updateList(remainingAmount, symbol, user.getStock()));
+    Double profit = getStockQuote(symbol).getLatestPrice() * amount;
+    user.setBalance(user.getBalance()+profit);
+    userService.saveUser(user);
+    return new StockStatusDTO(user.getBalance(), stockToResponseDTO(user.getStock()));
+  }
+
+
+  public List<Stock> updateList(Integer remainingAmount, String symbol, List<Stock> stockList) {
+    for (int i = 0; i <= stockList.size() - 1; i++) {
+      if (stockList.get(i).getType().equalsIgnoreCase(symbol)) {
+        if (remainingAmount <= 0) {
+        stockRepository.delete(stockList.get(i));
+        stockList.remove(i);
+        i--;
+        } else {
+          if (remainingAmount - stockList.get(i).getAmount() < 0) {
+            stockList.get(i).setAmount(remainingAmount);
+            remainingAmount = 0;
+            stockRepository.save(stockList.get(i));
+          } else {
+            remainingAmount = remainingAmount - stockList.get(i).getAmount();
+          }
+        }
+      }
+    }
+    return stockList;
+  }
 }

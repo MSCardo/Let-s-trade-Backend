@@ -19,6 +19,6 @@ public class MSFT extends Stock{
 
   @Override
   public String getType() {
-    return null;
+    return "MSFT";
   }
 }
