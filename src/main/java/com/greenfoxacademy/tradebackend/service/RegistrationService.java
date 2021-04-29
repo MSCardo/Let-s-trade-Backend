@@ -14,8 +14,6 @@ import com.greenfoxacademy.tradebackend.security.confirmationToken.ConfirmationT
 import com.greenfoxacademy.tradebackend.service.email.EmailSender;
 import com.greenfoxacademy.tradebackend.service.email.EmailService;
 import com.greenfoxacademy.tradebackend.service.email.EmailValidator;
-import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

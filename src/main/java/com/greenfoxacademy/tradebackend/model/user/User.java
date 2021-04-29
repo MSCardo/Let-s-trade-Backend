@@ -1,22 +1,17 @@
 package com.greenfoxacademy.tradebackend.model.user;
 
+import com.greenfoxacademy.tradebackend.model.stock.ScheduledStock;
 import com.greenfoxacademy.tradebackend.model.stock.Stock;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +35,9 @@ public class User implements UserDetails {
   private Boolean locked = false;
   private Boolean enabled = false;
   @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-  private List<Stock> stock;
+   private List<Stock> stock;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+  private List<ScheduledStock> scheduledStock;
   private Double balance;
 
   public User(String username) {

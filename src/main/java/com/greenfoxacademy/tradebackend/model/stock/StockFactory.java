@@ -2,8 +2,6 @@ package com.greenfoxacademy.tradebackend.model.stock;
 
 import com.greenfoxacademy.tradebackend.exception.exception.NoSuchStockException;
 import com.greenfoxacademy.tradebackend.model.user.User;
-import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

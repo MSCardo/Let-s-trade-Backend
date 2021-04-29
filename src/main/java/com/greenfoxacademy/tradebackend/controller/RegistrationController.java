@@ -2,7 +2,6 @@ package com.greenfoxacademy.tradebackend.controller;
 
 
 import com.greenfoxacademy.tradebackend.exception.exception.UserException;
-import com.greenfoxacademy.tradebackend.model.register.ConfirmationResponseDTO;
 import com.greenfoxacademy.tradebackend.model.register.RegisterResponseDTO;
 import com.greenfoxacademy.tradebackend.model.register.RegistrationRequestDTO;
 import com.greenfoxacademy.tradebackend.service.RegistrationService;
@@ -37,15 +36,13 @@ public class RegistrationController {
     return ResponseEntity.ok(registrationService.register(request));
   }
 
-
   @GetMapping("/register/confirm")
   public ResponseEntity<Object> validateUser(
-      @RequestParam("token") String token) throws URISyntaxException {
-
+      @RequestParam("token") String token) throws URISyntaxException, URISyntaxException {
     registrationService.confirmToken(token);
-    URI yahoo = new URI("http://www.yahoo.com/%22");
-        HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setLocation(yahoo);
+    URI home = new URI("http://localhost:4200/main");
+    HttpHeaders httpHeaders = new HttpHeaders();
+    httpHeaders.setLocation(home);
     return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
   }
 
