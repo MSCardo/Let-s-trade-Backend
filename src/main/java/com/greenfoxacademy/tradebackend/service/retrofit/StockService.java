@@ -30,8 +30,7 @@ public class StockService {
 
   @Autowired
   public StockService(StockRepository stockRepository,
-                      StockFactory stockFactory,
-                      UserService userService) {
+                      StockFactory stockFactory, UserService userService) {
     this.stockRepository = stockRepository;
     this.stockFactory = stockFactory;
     this.userService = userService;
@@ -65,13 +64,14 @@ public class StockService {
     userService.saveUser(user);
     stockRepository.save(stockFactory.createStock(stockAPI, symbol, user, amount));
     getUpdatedStocks(user);
-    return new StockStatusDTO(user.getBalance(),stockToResponseDTO(user.getStock()));
+    return new StockStatusDTO(user.getBalance(), stockToResponseDTO(user.getStock()));
   }
 
 
   public List<StockResponseDTO> stockToResponseDTO(List<Stock> stockList) {
     return stockList.stream()
-        .map(s -> new StockResponseDTO(s.getAmount(), s.getBuyPrice(), s.getLatestPrice(), s.getSymbol(), s.getTimestamp()))
+        .map(s -> new StockResponseDTO(s.getAmount(), s.getBuyPrice(), s.getLatestPrice(), s.getSymbol(),
+            s.getTimestamp()))
         .collect(Collectors.toList());
   }
 
@@ -79,7 +79,7 @@ public class StockService {
     Integer counter = 0;
     List<Stock> stockList = user.getStock();
     for (int i = 0; i < stockList.size(); i++) {
-      if (stockList.get(i).getType().equalsIgnoreCase(symbol)){
+      if (stockList.get(i).getType().equalsIgnoreCase(symbol)) {
         counter = counter + stockList.get(i).getAmount();
       }
     }
@@ -134,7 +134,8 @@ public class StockService {
     return stockList;
   }
 
-  public StockStatusDTO sellStock(String symbol, Integer amount, User user) throws NoSuchStockException, InvalidAmountException {
+  public StockStatusDTO sellStock(String symbol, Integer amount, User user)
+      throws NoSuchStockException, InvalidAmountException {
     isAmountValid(amount);
     isSymbolValid(symbol);
     Integer globalAmount = getAllAmountBySymbol(symbol, user);
@@ -144,7 +145,7 @@ public class StockService {
     Integer remainingAmount = globalAmount - amount;
     user.setStock(updateList(remainingAmount, symbol, user.getStock()));
     Double profit = getStockQuote(symbol).getLatestPrice() * amount;
-    user.setBalance(user.getBalance()+profit);
+    user.setBalance(user.getBalance() + profit);
     userService.saveUser(user);
     return new StockStatusDTO(user.getBalance(), stockToResponseDTO(user.getStock()));
   }
@@ -154,9 +155,9 @@ public class StockService {
     for (int i = 0; i <= stockList.size() - 1; i++) {
       if (stockList.get(i).getType().equalsIgnoreCase(symbol)) {
         if (remainingAmount <= 0) {
-        stockRepository.delete(stockList.get(i));
-        stockList.remove(i);
-        i--;
+          stockRepository.delete(stockList.get(i));
+          stockList.remove(i);
+          i--;
         } else {
           if (remainingAmount - stockList.get(i).getAmount() < 0) {
             stockList.get(i).setAmount(remainingAmount);
