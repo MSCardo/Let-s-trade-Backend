@@ -253,8 +253,7 @@ public class StockService {
     scheduledStockRepository.save(new ScheduledStock(user, symbol, amount, timestamp, action));
   }
 
-  //  @Scheduled(cron = "0 0 0 ? * MON-FRI *")
-  @Scheduled(fixedRate = 5000)
+  @Scheduled(cron = "0 0 0 ? * MON-FRI *")
   public void doScheduledAction() throws InsufficientBalanceException, InvalidAmountException, NoSuchStockException {
     System.out.println("FUT!");
     List<ScheduledStock> scheduledStockList = (List<ScheduledStock>) scheduledStockRepository.findAll();
