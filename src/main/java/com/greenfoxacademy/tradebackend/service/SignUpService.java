@@ -7,8 +7,6 @@ import com.greenfoxacademy.tradebackend.model.user.User;
 import com.greenfoxacademy.tradebackend.repository.UserRepository;
 import com.greenfoxacademy.tradebackend.security.confirmationToken.ConfirmationToken;
 import com.greenfoxacademy.tradebackend.security.confirmationToken.ConfirmationTokenService;
-import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

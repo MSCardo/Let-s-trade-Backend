@@ -2,7 +2,7 @@ package com.greenfoxacademy.tradebackend.controller;
 
 import com.greenfoxacademy.tradebackend.model.Hello;
 import com.greenfoxacademy.tradebackend.service.HelloService;
-import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
+import com.greenfoxacademy.tradebackend.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

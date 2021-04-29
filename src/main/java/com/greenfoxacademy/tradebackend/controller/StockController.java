@@ -1,16 +1,10 @@
 package com.greenfoxacademy.tradebackend.controller;
 
-import com.greenfoxacademy.tradebackend.exception.exception.InsufficientBalanceException;
-import com.greenfoxacademy.tradebackend.exception.exception.InvalidAmountException;
-import com.greenfoxacademy.tradebackend.exception.exception.NoSuchStockException;
-import com.greenfoxacademy.tradebackend.exception.exception.NoSuchUserException;
-import com.greenfoxacademy.tradebackend.model.stock.Stock;
-import com.greenfoxacademy.tradebackend.model.stock.StockRequestDTO;
-import com.greenfoxacademy.tradebackend.model.stock.StockResponseDTO;
-import com.greenfoxacademy.tradebackend.model.stock.StockStatusDTO;
+import com.greenfoxacademy.tradebackend.exception.exception.*;
+import com.greenfoxacademy.tradebackend.model.stock.*;
 import com.greenfoxacademy.tradebackend.model.user.User;
 import com.greenfoxacademy.tradebackend.service.UserService;
-import com.greenfoxacademy.tradebackend.service.retrofit.StockService;
+import com.greenfoxacademy.tradebackend.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +47,11 @@ public class StockController {
   public ResponseEntity<StockStatusDTO> sellStocks(@RequestBody StockRequestDTO stockRequestDTO, @RequestHeader(value = "token") String token)
       throws NoSuchUserException, NoSuchStockException, InvalidAmountException {
     return new ResponseEntity<>(stockService.sellStock(stockRequestDTO.getSymbol(), stockRequestDTO.getAmount(), userService.getUserByToken(token)), HttpStatus.OK);
+  }
+
+  @PostMapping("/scheduled")
+  public ResponseEntity<List<ScheduledStockResponseDTO>> scheduleAction(@RequestBody ScheduledStockRequestDTO scheduledStockRequestDTO, @RequestHeader(value = "token") String token) throws NoSuchUserException, InvalidActionException, InvalidAmountException, NoSuchStockException, InvalidTimeException {
+    stockService.saveScheduledAction(userService.getUserByToken(token), scheduledStockRequestDTO.getSymbol(), scheduledStockRequestDTO.getAmount(), scheduledStockRequestDTO.getTimestamp(), scheduledStockRequestDTO.getAction());
+    return new ResponseEntity<>(stockService.scheduledStockToResponseDTO(userService.getUserByToken(token).getScheduledStock()), HttpStatus.CREATED);
   }
 }

@@ -2,14 +2,7 @@ package com.greenfoxacademy.tradebackend.exception.handler;
 
 
 
-import com.greenfoxacademy.tradebackend.exception.exception.InsufficientBalanceException;
-import com.greenfoxacademy.tradebackend.exception.exception.InvalidAmountException;
-import com.greenfoxacademy.tradebackend.exception.exception.MissingParameterException;
-import com.greenfoxacademy.tradebackend.exception.exception.NoSuchStockException;
-import com.greenfoxacademy.tradebackend.exception.exception.NotValidEMailException;
-import com.greenfoxacademy.tradebackend.exception.exception.NotValidatedUserException;
-import com.greenfoxacademy.tradebackend.exception.exception.ReservedEMailException;
-import com.greenfoxacademy.tradebackend.exception.exception.ReservedUsernameException;
+import com.greenfoxacademy.tradebackend.exception.exception.*;
 import com.greenfoxacademy.tradebackend.model.ErrorDTO;
 import com.greenfoxacademy.tradebackend.model.login.LoginResponseDTO;
 import com.greenfoxacademy.tradebackend.model.register.RegisterResponseDTO;
@@ -23,7 +16,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
 
   @ExceptionHandler(ReservedUsernameException.class)
   public ResponseEntity<RegisterResponseDTO> reservedUsernameExceptionHandling(ReservedUsernameException ex) {
@@ -86,4 +78,18 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(new ErrorDTO("Invalid amount!"),
         HttpStatus.CONFLICT);
   }
+
+  @ExceptionHandler(InvalidActionException.class)
+  public ResponseEntity<ErrorDTO> invalidActionExceptionHandling(){
+    return new ResponseEntity<>(new ErrorDTO("Invalid action!"),
+            HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(InvalidTimeException.class)
+  public ResponseEntity<ErrorDTO> invalidTimeExceptionHandling(){
+    return new ResponseEntity<>(new ErrorDTO("Invalid time!"),
+            HttpStatus.CONFLICT);
+  }
+
+
 }
